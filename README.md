@@ -7,6 +7,8 @@ Curl is required!
 
 * Create a Project in the Google APIs Console: https://code.google.com/apis/console/
 * Enable the Analytics API under Services
+* Under API Access: create an Oauth 2.0 Client-ID
+* Give a Product-Name, choose "Web-Application"
 * Set a redirect-uri in the Project which points to your App's Url
 
 ##2. Set up Auth
@@ -43,7 +45,7 @@ if ($auth['http_code'] == 200) {
 ```
 
 With the accessToken you can query the API for the given time (seconds) in $tokenExpires.
-If you need to query the API beyond the this time, you should store the refreshToken along with a timestamp in the Database / Session.
+If you need to query the API beyond this time, you should store the refreshToken along with a timestamp in the Database / Session.
 If the accessToken expires, you can get a new one with the refreshToken.
 
 ```php
