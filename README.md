@@ -7,7 +7,7 @@ Curl is required!
 
 * Create a Project in the Google APIs Console: https://code.google.com/apis/console/
 * Enable the Analytics API under Services
-* Set a redirect-Uri in the Project which points to your App
+* Set a redirect-uri in the Project which points to your App's Url
 
 ##2. Set up Auth
 
@@ -23,8 +23,9 @@ $ga->auth->setRedirectUri('redirect_uri');
 $url = $ga->auth->buildAuthUrl();
 ```
 
-Provide a link to the auth-url. The has to log in with his Google Account and will be redirected back to the redirect-Uri along with a code
-The code is needed to get the tokens
+Provide a link to the Auth-Url. The user has to log in with his Google Account, accept that your App will access the Analytics Data. After completing this steps, 
+the user will be redirected back to the redirect-uri along with a code.
+This code is needed to get the tokens.
 
 ```php
 $code = $_GET['code'];
@@ -41,22 +42,22 @@ if ($auth['http_code'] == 200) {
 }
 ```
 
-With the accessToken you can query the API for the given time in $tokenExpires.
-If you need to query the API byond the expire-time, you should store the refreshToken along with a timestamp in the Database / Session.
+With the accessToken you can query the API for the given time (seconds) in $tokenExpires.
+If you need to query the API beyond the this time, you should store the refreshToken along with a timestamp in the Database / Session.
 If the accessToken expires, you can get a new one with the refreshToken.
 
 ```php
 //Check if the accessToken is expired
 if ((time() - $tokenCreated) >= $tokenExpires) {
 	$auth = $ga->auth->refreshAccessToken($refreshToken);
-	//Get the accessToken as above and save it int the Database / Session
+	//Get the accessToken as above and save it into the Database / Session
 }
 ```
 
 ##3. Find the Account-ID
 
 Before you can query the API, you need the ID of the Account you want to query the data.
-The ID can be found manually in the Google Analytic Options of with the class:
+The ID can be found like this:
 
 ```php
 $profiles = $ga->getProfiles();
@@ -66,8 +67,8 @@ foreach ($profiles['items'] as $item) {
 	$name = $item['name'];
 	$accounts[$id] = $name;
 }
-//Print out the Accounts with Id => Name, the array-key is the ID you have to remember
-print_r($account);
+//Print out the Accounts with Id => Name, the array-key of one Account is the ID you have to remember
+print_r($accounts);
 ```
 ##4. Query the Google Analytics API
 
@@ -103,8 +104,11 @@ $params = array(
 ); 
 $visitsByCountry = $ga->query($params);
 
-//Same data as Example1 but with the built in method:
+//Example3: Same data as Example1 but with the built in method:
 $visits = $ga->getVisitsByDate();
+
+//Example4: Get visits by Operating Systems and return max. 100 results
+$visitsByOs = $ga->getVisitsBySystemOs(array('max-results' => 100));
 ```
 ###Metrics & Dimensions Reference:
 https://developers.google.com/analytics/devguides/reporting/core/dimsmets
