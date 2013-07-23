@@ -1,27 +1,33 @@
 #Google Analytics API PHP
 
-Simple class to set up Oauth 2.0 with Google and query the Google Analytics API v3 with PHP.
-Curl is required! 
+Simple class to set up Oauth 2.0 with Google and query the Google Analytics API v3 with PHP. Curl is required!
+The class supports getting the access tokens for *web applications* and *service accounts* registered in the Google APIs console.   
+See the documentation for further informations: https://developers.google.com/accounts/docs/OAuth2
 
 ##1. Basic Setup
 
 * Create a Project in the Google APIs Console: https://code.google.com/apis/console/
 * Enable the Analytics API under Services
-* Under API Access: create an Oauth 2.0 Client-ID
-* Give a Product-Name, choose "Web-Application"
-* Set a redirect-uri in the Project which points to your App's Url
+* Under API Access: Create an Oauth 2.0 Client-ID
+* Give a Product-Name, choose *Web Application* or *Service Account* depending on your needs
+* Web Application: Set a redirect-uri in the project which points to your apps url
+* Service Account: Download the private key (.p12 file)
 
 ##2. Set up Auth
+
+Depending on the chosen application type, the setup is slightly different. This section describes both ways independently.
+
+###2.1 Web applications
 
 ```php
 include('GoogleAnalyticsAPI.class.php');
 
-$ga = new GoogleAnalyticsAPI();
-$ga->auth->setClientId('your_client_id');
-$ga->auth->setClientSecret('your_client_secret');
-$ga->auth->setRedirectUri('redirect_uri');
+$ga = new GoogleAnalyticsAPI(); 
+$ga->auth->setClientId('your_client_id'); // From the APIs console
+$ga->auth->setClientSecret('your_client_secret'); // From the APIs console
+$ga->auth->setRedirectUri('redirect_uri'); // Url to your app, must match one in the APIs console
 
-//Get the Auth-Url
+// Get the Auth-Url
 $url = $ga->auth->buildAuthUrl();
 ```
 
@@ -33,26 +39,56 @@ This code is needed to get the tokens.
 $code = $_GET['code'];
 $auth = $ga->auth->getAccessToken($code);
 
-//Try to get the AccessToken
+// Try to get the AccessToken
 if ($auth['http_code'] == 200) {
 	$accessToken = $auth['access_token'];
 	$refreshToken = $auth['refresh_token'];
 	$tokenExpires = $auth['expires_in'];
 	$tokenCreated = time();
 } else {
-	//error...
+	// error...
 }
 ```
 
-With the accessToken you can query the API for the given time (seconds) in $tokenExpires.
+With the accessToken you can query the API for the given time (seconds) in *$tokenExpires*.
 If you need to query the API beyond this time, you should store the refreshToken along with a timestamp in the Database / Session.
 If the accessToken expires, you can get a new one with the refreshToken.
 
 ```php
-//Check if the accessToken is expired
+// Check if the accessToken is expired
 if ((time() - $tokenCreated) >= $tokenExpires) {
 	$auth = $ga->auth->refreshAccessToken($refreshToken);
-	//Get the accessToken as above and save it into the Database / Session
+	// Get the accessToken as above and save it into the Database / Session
+}
+```
+
+###2.2 Service accounts
+
+Copy the email address from the APIs console (xxxxxxxx@developer.gserviceaccount.com). Visit your GA admin and add this email
+as a user to your properties.
+
+```php
+include('GoogleAnalyticsAPI.class.php');
+
+$ga = new GoogleAnalyticsAPI('service');
+$ga->auth->setClientId('your_client_id'); // From the APIs console
+$ga->auth->setEmail('your_email_addy'); // From the APIs console
+$ga->auth->setPrivateKey('/super/secure/path/to/your/privatekey.p12'); // Path to the .p12 file
+```
+
+To query the API, you need to obtain an access token. This token is valid *one hour*, afterwards you'll need to get a new
+token. You can store the token in the database/session.
+
+```php
+$auth = $ga->auth->getAccessToken();
+
+// Try to get the AccessToken
+if ($auth['http_code'] == 200) {
+	$accessToken = $auth['access_token'];
+	$tokenExpires = $auth['expires_in'];
+	$tokenCreated = time();
+} else {
+	// error...
 }
 ```
 
@@ -69,7 +105,7 @@ foreach ($profiles['items'] as $item) {
 	$name = $item['name'];
 	$accounts[$id] = $name;
 }
-//Print out the Accounts with Id => Name, the array-key of one Account is the ID you have to remember
+// Print out the Accounts with Id => Name, the array-key of one Account is the ID you have to remember
 print_r($accounts);
 ```
 ##4. Query the Google Analytics API
@@ -78,25 +114,25 @@ Once you have a valid accessToken and an Account-ID, you can query the Google An
 You can set some default Query Parameters that will be executed with every query.
 
 ```php
-//Set the accessToken and Account-Id
+// Set the accessToken and Account-Id
 $ga->setAccessToken($accessToken);
 $ga->setAccountId('ga:xxxxxxx');
 
-//Set the default params. For example the start/end dates and max-results
+// Set the default params. For example the start/end dates and max-results
 $defaults = array(
 	'start-date' => date('Y-m-d', strtotime('-1 month')),
 	'end-date' => date('Y-m-d'),
 );
 $ga->setDefaultQueryParams($defaults);
 
-//Example1: Get visits by date
+// Example1: Get visits by date
 $params = array(
 	'metrics' => 'ga:visits',
 	'dimensions' => 'ga:date',
 );
 $visits = $ga->query($params);
 
-//Example2: Get visits by country
+// Example2: Get visits by country
 $params = array(
 	'metrics' => 'ga:visits',
 	'dimensions' => 'ga:country',
@@ -106,11 +142,17 @@ $params = array(
 ); 
 $visitsByCountry = $ga->query($params);
 
-//Example3: Same data as Example1 but with the built in method:
+// Example3: Same data as Example1 but with the built in method:
 $visits = $ga->getVisitsByDate();
 
-//Example4: Get visits by Operating Systems and return max. 100 results
+// Example4: Get visits by Operating Systems and return max. 100 results
 $visitsByOs = $ga->getVisitsBySystemOs(array('max-results' => 100));
+
+// Example5: Get referral traffic
+$referralTraffic = $ga->getRefferralTraffic();
+
+// Example6: Get visits by languages
+$visitsByLanguages = $ga->getVisitsByLanguages();
 ```
 ###Metrics & Dimensions Reference:
 https://developers.google.com/analytics/devguides/reporting/core/dimsmets
