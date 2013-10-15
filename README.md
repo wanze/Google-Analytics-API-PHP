@@ -149,7 +149,7 @@ $visits = $ga->getVisitsByDate();
 $visitsByOs = $ga->getVisitsBySystemOs(array('max-results' => 100));
 
 // Example5: Get referral traffic
-$referralTraffic = $ga->getRefferralTraffic();
+$referralTraffic = $ga->getReferralTraffic();
 
 // Example6: Get visits by languages
 $visitsByLanguages = $ga->getVisitsByLanguages();
