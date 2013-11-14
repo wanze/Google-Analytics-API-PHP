@@ -98,6 +98,11 @@ Before you can query the API, you need the ID of the Account you want to query t
 The ID can be found like this:
 
 ```php
+// Set the accessToken and Account-Id
+$ga->setAccessToken($accessToken);
+$ga->setAccountId('ga:xxxxxxx');
+
+// Load profiles
 $profiles = $ga->getProfiles();
 $accounts = array();
 foreach ($profiles['items'] as $item) {
@@ -105,7 +110,8 @@ foreach ($profiles['items'] as $item) {
 	$name = $item['name'];
 	$accounts[$id] = $name;
 }
-// Print out the Accounts with Id => Name, the array-key of one Account is the ID you have to remember
+// Print out the Accounts with Id => Name. Save the Id (array-key) of the account you want to query data. 
+// See next chapter how to set the account-id.
 print_r($accounts);
 ```
 ##4. Query the Google Analytics API
