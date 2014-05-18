@@ -1,0 +1,15 @@
+{
+    "name": "shahariaazam/simple-analytics",
+    "description": "Simple Google Analytics Reporting API",
+    "homepage": "http://shahariaazam.com",
+    "type": "project",
+    "license": "MIT",
+    "require": {
+        "php": ">=5.4"
+    },
+    "autoload": {
+        "psr-0": {
+            "Google\\Api\\": "Lib"
+        }
+    }
+}

@@ -1,0 +1,4 @@
+vendor/*
+.git/*
+
+settings.php
