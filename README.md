@@ -6,6 +6,10 @@ Simple class to set up Oauth 2.0 with Google and query the Google Analytics API 
 The class supports getting the access tokens for *web applications* and *service accounts* registered in the Google APIs console.   
 See the documentation for further informations: https://developers.google.com/accounts/docs/OAuth2
 
+##Install via Composer
+Just add the following line in your `composer.json` and update your dependencies via running composer update command.
+`"shahariaazam/google-analytics-api-php": "dev-master"`
+
 ##1. Basic Setup
 
 * Create a Project in the Google APIs Console: https://code.google.com/apis/console/
