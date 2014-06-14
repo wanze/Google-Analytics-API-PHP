@@ -327,4 +327,43 @@ class Analytics
         return json_decode($data, $this->assoc);
 
     }
+
+    public function getOfflineAccessToken($grantCode, $grantType)
+    {
+        $oathWeb = new OauthWeb();
+        $oathWeb->getOfflineAccessToken($grantCode, $grantType);
+    }
+
+    public function prepareToken()
+    {
+        if (isset($_GET['force_oauth'])) {
+            $_SESSION['oauth_access_token'] = null;
+        }
+
+        if (!isset($_SESSION['oauth_access_token']) && !isset($_GET['code'])) {
+            // Go get the url of the authentication page, redirect the client and go get that token!
+            $url = $this->auth->buildAuthUrl();
+            header("Location: " . $url);
+        }
+
+        if (!isset($_SESSION['oauth_access_token']) && isset($_GET['code'])) {
+
+            $auth = $this->auth->getAccessToken($_GET['code']);
+
+            if ($auth['http_code'] == 200) {
+                $accessToken = $auth['access_token'];
+                $refreshToken = $auth['refresh_token'];
+                $tokenExpires = $auth['expires_in'];
+                $tokenCreated = time();
+
+                $_SESSION['oauth_access_token'] = $accessToken;
+
+                if(null != $this->getOfflineAccessToken($accessToken, 'offline')){
+                    $_SESSION['oauth_access_token'] = $this->getOfflineAccessToken($accessToken, 'offline');
+                }
+            } else {
+                die("Sorry, something wend wrong retrieving the oAuth tokens");
+            }
+        }
+    }
 } 
