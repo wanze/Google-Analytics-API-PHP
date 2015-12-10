@@ -41,6 +41,7 @@ class GoogleAnalyticsAPI {
 	const API_URL = 'https://www.googleapis.com/analytics/v3/data/ga';
 	const WEBPROPERTIES_URL = 'https://www.googleapis.com/analytics/v3/management/accounts/~all/webproperties';
 	const PROFILES_URL = 'https://www.googleapis.com/analytics/v3/management/accounts/~all/webproperties/~all/profiles';
+	const TIMEZONE = 'America/New_York';
 
 	public $auth = null;
 	protected $accessToken = '';
@@ -61,8 +62,10 @@ class GoogleAnalyticsAPI {
 	 * @param String $auth (default: 'web') 'web' for Web-applications with end-users involved, 'service' for service applications (server-to-server)
 	 */
 	public function __construct($auth='web') {
-
 		if (!function_exists('curl_init')) throw new Exception('The curl extension for PHP is required.');
+		if (!ini_get('date.timezone')) {
+		    date_default_timezone_set(self::TIMEZONE);
+		}
 		$this->auth = ($auth == 'web') ? new GoogleOauthWeb() : new GoogleOauthService();
 		$this->defaultQueryParams = array(
 			'start-date' => date('Y-m-d', strtotime('-1 month')),
