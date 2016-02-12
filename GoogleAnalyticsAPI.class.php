@@ -38,6 +38,7 @@
  */
 class GoogleAnalyticsAPI {
 
+	const REALTIME_API_URL = 'https://www.googleapis.com/analytics/v3/data/realtime';
 	const API_URL = 'https://www.googleapis.com/analytics/v3/data/ga';
 	const WEBPROPERTIES_URL = 'https://www.googleapis.com/analytics/v3/management/accounts/~all/webproperties';
 	const PROFILES_URL = 'https://www.googleapis.com/analytics/v3/management/accounts/~all/webproperties/~all/profiles';
@@ -133,6 +134,18 @@ class GoogleAnalyticsAPI {
 	public function query($params=array()) {
 		return $this->_query($params);
 	}
+	
+	    /**
+	     * Query the RealTime Google Analytics API
+	     *
+	     * @access public
+	     * @param array $params (default: array()) Query parameters
+	     * @return array data
+	     */
+	    public function query_realtime($params = array())
+	    {
+	        return $this->_query_realtime($params);
+	    }	
 
 
 	/**
@@ -374,6 +387,15 @@ class GoogleAnalyticsAPI {
 		return $this->_query($_params);
 
 	}
+	
+    public function getRealTimeReport($params = array())
+    {
+        $defaults = array(
+            'metrics' => 'rt:activeVisitors',            
+        );
+        $_params = array_merge($defaults, $params);
+        return $this->_query_realtime($_params);
+    }	
 
 
 	protected function _query($params=array()){
@@ -387,6 +409,18 @@ class GoogleAnalyticsAPI {
 		return json_decode($data, $this->assoc);
 
 	}
+	
+    protected function _query_realtime($params = array())
+    {
+        if (!$this->accessToken || !$this->accountId)
+        {
+            throw new Exception('You must provide the accessToken and an accountId');
+        }
+        $_params = array_merge($this->defaultQueryParams, array('access_token' => $this->accessToken, 'ids' => $this->accountId));
+        $queryParams = array_merge($_params, $params);
+        $data = Http::curl(self::REALTIME_API_URL, $queryParams);
+        return json_decode($data, $this->assoc);
+    }	
 
 }
 
