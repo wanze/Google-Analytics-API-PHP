@@ -67,7 +67,7 @@ class GoogleAnalyticsAPI {
 		$this->defaultQueryParams = array(
 			'start-date' => date('Y-m-d', strtotime('-1 month')),
 			'end-date' => date('Y-m-d'),
-			'metrics' => 'ga:visits',
+			'metrics' => 'ga:sessions',
 		);
 
 	}
@@ -180,7 +180,7 @@ class GoogleAnalyticsAPI {
 	public function getVisitsByDate($params=array()) {
 
 		$defaults = array(
-			'metrics' => 'ga:visits',
+			'metrics' => 'ga:sessions',
 			'dimensions' => 'ga:date',
 		);
 		$_params = array_merge($defaults, $params);
@@ -191,7 +191,7 @@ class GoogleAnalyticsAPI {
 	public function getAudienceStatistics($params=array()) {
 
 		$defaults = array(
-			'metrics' => 'ga:visitors,ga:newVisits,ga:percentNewVisits,ga:visits,ga:bounces,ga:pageviews,ga:visitBounceRate,ga:timeOnSite,ga:avgTimeOnSite',
+			'metrics' => 'ga:users,ga:newUsers,ga:percentNewSessions,ga:sessions,ga:bounces,ga:pageviews,ga:bounceRate,ga:sessionDuration,ga:avgSessionDuration',
 		);
 		$_params = array_merge($defaults, $params);
 		return $this->_query($_params);
@@ -201,9 +201,9 @@ class GoogleAnalyticsAPI {
 	public function getVisitsByCountries($params=array()) {
 
 		$defaults = array(
-			'metrics' => 'ga:visits',
+			'metrics' => 'ga:sessions',
 			'dimensions' => 'ga:country',
-			'sort' => '-ga:visits',
+			'sort' => '-ga:sessions',
 		);
 		$_params = array_merge($defaults, $params);
 		return $this->_query($_params);
@@ -213,9 +213,9 @@ class GoogleAnalyticsAPI {
 	public function getVisitsByCities($params=array()) {
 
 		$defaults = array(
-			'metrics' => 'ga:visits',
+			'metrics' => 'ga:sessions',
 			'dimensions' => 'ga:city',
-			'sort' => '-ga:visits',
+			'sort' => '-ga:sessions',
 		);
 		$_params = array_merge($defaults, $params);
 		return $this->_query($_params);
@@ -225,9 +225,9 @@ class GoogleAnalyticsAPI {
 	public function getVisitsByLanguages($params=array()) {
 
 		$defaults = array(
-			'metrics' => 'ga:visits',
+			'metrics' => 'ga:sessions',
 			'dimensions' => 'ga:language',
-			'sort' => '-ga:visits',
+			'sort' => '-ga:sessions',
 		);
 		$_params = array_merge($defaults, $params);
 		return $this->_query($_params);
@@ -237,9 +237,9 @@ class GoogleAnalyticsAPI {
 	public function getVisitsBySystemBrowsers($params=array()) {
 
 		$defaults = array(
-			'metrics' => 'ga:visits',
+			'metrics' => 'ga:sessions',
 			'dimensions' => 'ga:browser',
-			'sort' => '-ga:visits',
+			'sort' => '-ga:sessions',
 		);
 		$_params = array_merge($defaults, $params);
 		return $this->_query($_params);
@@ -249,9 +249,9 @@ class GoogleAnalyticsAPI {
 	public function getVisitsBySystemOs($params=array()) {
 
 		$defaults = array(
-			'metrics' => 'ga:visits',
+			'metrics' => 'ga:sessions',
 			'dimensions' => 'ga:operatingSystem',
-			'sort' => '-ga:visits',
+			'sort' => '-ga:sessions',
 		);
 		$_params = array_merge($defaults, $params);
 		return $this->_query($_params);
@@ -262,9 +262,9 @@ class GoogleAnalyticsAPI {
 	public function getVisitsBySystemResolutions($params=array()) {
 
 		$defaults = array(
-			'metrics' => 'ga:visits',
+			'metrics' => 'ga:sessions',
 			'dimensions' => 'ga:screenResolution',
-			'sort' => '-ga:visits',
+			'sort' => '-ga:sessions',
 		);
 		$_params = array_merge($defaults, $params);
 		return $this->_query($_params);
@@ -274,9 +274,9 @@ class GoogleAnalyticsAPI {
 	public function getVisitsByMobileOs($params=array()) {
 
 		$defaults = array(
-			'metrics' => 'ga:visits',
+			'metrics' => 'ga:sessions',
 			'dimensions' => 'ga:operatingSystem',
-			'sort' => '-ga:visits',
+			'sort' => '-ga:sessions',
 			'segment' => 'gaid::-11',
 		);
 		$_params = array_merge($defaults, $params);
@@ -287,9 +287,9 @@ class GoogleAnalyticsAPI {
 	public function getVisitsByMobileResolutions($params=array()) {
 
 		$defaults = array(
-			'metrics' => 'ga:visits',
+			'metrics' => 'ga:sessions',
 			'dimensions' => 'ga:screenResolution',
-			'sort' => '-ga:visits',
+			'sort' => '-ga:sessions',
 			'segment' => 'gaid::-11',
 		);
 		$_params = array_merge($defaults, $params);
@@ -343,7 +343,7 @@ class GoogleAnalyticsAPI {
 	public function getTrafficSources($params=array()) {
 
 		$defaults = array(
-			'metrics' => 'ga:visits',
+			'metrics' => 'ga:sessions',
 			'dimensions' => 'ga:medium',
 		);
 		$_params = array_merge($defaults, $params);
@@ -354,9 +354,9 @@ class GoogleAnalyticsAPI {
 	public function getKeywords($params=array()) {
 
 		$defaults = array(
-			'metrics' => 'ga:visits',
+			'metrics' => 'ga:sessions',
 			'dimensions' => 'ga:keyword',
-			'sort' => '-ga:visits',
+			'sort' => '-ga:sessions',
 		);
 		$_params = array_merge($defaults, $params);
 		return $this->_query($_params);
@@ -366,9 +366,9 @@ class GoogleAnalyticsAPI {
 	public function getReferralTraffic($params=array()) {
 
 		$defaults = array(
-			'metrics' => 'ga:visits',
+			'metrics' => 'ga:sessions',
 			'dimensions' => 'ga:source',
-			'sort' => '-ga:visits',
+			'sort' => '-ga:sessions',
 		);
 		$_params = array_merge($defaults, $params);
 		return $this->_query($_params);
