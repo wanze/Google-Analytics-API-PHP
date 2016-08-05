@@ -191,7 +191,7 @@ class GoogleAnalyticsAPI {
 	public function getAudienceStatistics($params=array()) {
 
 		$defaults = array(
-			'metrics' => 'ga:visitors,ga:newVisits,ga:percentNewVisits,ga:sessions,ga:bounces,ga:pageviews,ga:visitBounceRate,ga:timeOnSite,ga:avgTimeOnSite',
+			'metrics' => 'ga:users,ga:newUsers,ga:percentNewSessions,ga:sessions,ga:bounces,ga:pageviews,ga:bounceRate,ga:sessionDuration,ga:avgSessionDuration',
 		);
 		$_params = array_merge($defaults, $params);
 		return $this->_query($_params);
