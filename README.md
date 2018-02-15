@@ -1,10 +1,10 @@
-#Google Analytics API PHP
+# Google Analytics API PHP
 
 Simple class to set up Oauth 2.0 with Google and query the Google Analytics API v3 with PHP. Curl is required!
 The class supports getting the access tokens for *web applications* and *service accounts* registered in the Google APIs console.   
 See the documentation for further informations: https://developers.google.com/accounts/docs/OAuth2
 
-##1. Basic Setup
+## 1. Basic Setup
 
 * Create a Project in the Google APIs Console: https://code.google.com/apis/console/
 * Enable the Analytics API under Services
@@ -13,11 +13,11 @@ See the documentation for further informations: https://developers.google.com/ac
 * Web Application: Set a redirect-uri in the project which points to your apps url
 * Service Account: Download the private key (.p12 file)
 
-##2. Set up Auth
+## 2. Set up Auth
 
 Depending on the chosen application type, the setup is slightly different. This section describes both ways independently.
 
-###2.1 Web applications
+### 2.1 Web applications
 
 ```php
 include('GoogleAnalyticsAPI.class.php');
@@ -62,7 +62,7 @@ if ((time() - $tokenCreated) >= $tokenExpires) {
 }
 ```
 
-###2.2 Service accounts
+### 2.2 Service accounts
 
 Copy the email address from the APIs console (xxxxxxxx@developer.gserviceaccount.com). Visit your GA admin and add this email
 as a user to your properties.
@@ -92,7 +92,7 @@ if ($auth['http_code'] == 200) {
 }
 ```
 
-##3. Find the Account-ID
+## 3. Find the Account-ID
 
 Before you can query the API, you need the ID of the Account you want to query the data.
 The ID can be found like this:
@@ -114,7 +114,7 @@ foreach ($profiles['items'] as $item) {
 // See next chapter how to set the account-id.
 print_r($accounts);
 ```
-##4. Query the Google Analytics API
+## 4. Query the Google Analytics API
 
 Once you have a valid accessToken and an Account-ID, you can query the Google Analytics API.
 You can set some default Query Parameters that will be executed with every query.
@@ -160,8 +160,8 @@ $referralTraffic = $ga->getReferralTraffic();
 // Example6: Get visits by languages
 $visitsByLanguages = $ga->getVisitsByLanguages();
 ```
-###Metrics & Dimensions Reference:
+### Metrics & Dimensions Reference:
 https://developers.google.com/analytics/devguides/reporting/core/dimsmets
 
-###Google Analytics Query Explorer for testing queries and results:
+### Google Analytics Query Explorer for testing queries and results:
 http://ga-dev-tools.appspot.com/explorer/
